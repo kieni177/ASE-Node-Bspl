@@ -3,6 +3,11 @@ import { Pool } from 'pg';
 import bodyParser from "body-parser";
 
 
+class Person  {
+ id: Number;
+ name: String;
+};
+
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -41,6 +46,16 @@ app.get('/person/:id', async (req, res)  => {
         console.log(err.stack)
     }
 });
+
+app.post('/person', async (req, res)  => {
+    try {
+        let person: Person = req.body;
+        res.send(person);
+    } catch (err) {
+        console.log(err.stack)
+    }
+});
+
 
 app.listen(port, err => {
     if (err) {
