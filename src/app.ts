@@ -29,7 +29,6 @@ const port = 8080;
 app.use(bodyParser.json())
 
 
-
 class Verify_Request {
     equation: string;
     max_moves: number;
@@ -74,9 +73,9 @@ app.post('/puzzles/verify', async (req, res)  => {
             const lastSolutions = [...currentSoltions];
             currentSoltions = []
 
-            for(let p = 0; p <= lastSolutions.length; p++) {
+            for(let p = 0; p < lastSolutions.length; p++) {
 
-                for(let i = 0; i <= lastSolutions[p].length; i++) {
+                for(let i = 0; i < lastSolutions[p].length; i++) {
 
                     //2b Schelife wenn ziffer -> m = moveDigit[]
                     // m durcgehen (o)
@@ -93,16 +92,17 @@ app.post('/puzzles/verify', async (req, res)  => {
                                 c[i] = removeArray[k];
 
 
-                                for(let j = 0; j <= c.length; j++) {
+                                for(let j = 0; j < c.length; j++) {
                                     if( i!=j ) {
                                         if( splitSymbols[i] !==  '='  && splitSymbols[i] !==  '+' && splitSymbols[i] !==  '-') {
                                             let addingArray = addingDigit(splitSymbols[i]);
 
                                             if(addingArray && removeArray.length > 0  ) {
 
-                                                for(let a = 0;  a <= addingArray.length; a++) {
+                                                for(let a = 0;  a < addingArray.length; a++) {
                                                     let c2 = [...c];
                                                     c2[j] = addingArray[a];
+                                                    currentSoltions.push(c2);
                                                 }
                                             }
                                         }
@@ -124,6 +124,14 @@ app.post('/puzzles/verify', async (req, res)  => {
 
         //status 417
         //status 200
+
+
+        const requestInsertQuery = "INSERT INTO Request(correct, equations, max_moves) VALUES($1, $2, $3) RETURNING id;";
+        pool.query(requestInsertQuery, [false, verifyRequest.equation, verifyRequest.max_moves]);
+
+
+        
+
 
         res.send("hias");
     } catch (err) {
