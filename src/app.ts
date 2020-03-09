@@ -86,7 +86,20 @@ app.post('/puzzles/verify', async (req, res)  => {
 
 
                     if( splitSymbols[i] !==  '='  && splitSymbols[i] !==  '+' && splitSymbols[i] !==  '-') {
+
+                        
+                        let movingArray = movingDigit(splitSymbols[i]);
+
+                        if(movingArray && movingArray.length > 0  ) {
+                            for(let o = 0;  o < movingArray.length; o++) {
+                                let c3 = [...splitSymbols];
+                                c3[i] = movingArray[o];
+                           }
+                        }
+
                         let removeArray = removeDigit(splitSymbols[i]);
+
+
 
                         if(removeArray && removeArray.length > 0 ) {
 
