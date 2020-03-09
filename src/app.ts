@@ -85,35 +85,36 @@ app.post('/puzzles/verify', async (req, res)  => {
                     // -) c3[i] = m[0]
 
 
-                    if( splitSymbols[i] !==  '='  && splitSymbols[i] !==  '+' && splitSymbols[i] !==  '-') {
+                    if( lastSolutions[p][i] !==  '='  && lastSolutions[p][i] !==  '+' && lastSolutions[p][i] !==  '-') {
 
                         
-                        let movingArray = movingDigit(splitSymbols[i]);
+                        let movingArray = movingDigit(lastSolutions[p][i]);
 
                         if(movingArray && movingArray.length > 0  ) {
                             for(let o = 0;  o < movingArray.length; o++) {
-                                let c3 = [...splitSymbols];
+                                let c3 = [...lastSolutions[p][i]];
                                 c3[i] = movingArray[o];
+                                currentSoltions.push(c3);
+
                            }
                         }
 
-                        let removeArray = removeDigit(splitSymbols[i]);
 
-
+                        let removeArray = removeDigit(lastSolutions[p][i]);
 
                         if(removeArray && removeArray.length > 0 ) {
 
                             //2. Schleife
                             for(let k = 0; k <= removeArray.length; k++) {
-                                let c = [...splitSymbols];
+                                let c = [...lastSolutions[p][i]];
                                 c[i] = removeArray[k];
 
 
                                 //3. Schleife
                                 for(let j = 0; j < c.length; j++) {
                                     if( i!=j ) {
-                                        if( splitSymbols[i] !==  '='  && splitSymbols[i] !==  '+' && splitSymbols[i] !==  '-') {
-                                            let addingArray = addingDigit(splitSymbols[i]);
+                                        if( lastSolutions[p][j] !==  '='  && lastSolutions[p][j] !==  '+' && lastSolutions[p][j] !==  '-') {
+                                            let addingArray = addingDigit(lastSolutions[p][j]);
 
                                             if(addingArray && removeArray.length > 0  ) {
 
