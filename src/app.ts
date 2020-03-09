@@ -2,7 +2,6 @@ import express from 'express';
 import { Pool } from 'pg';
 import bodyParser from "body-parser";
 
-
 class RequestTable {
     id: number;
     correct: boolean;
@@ -22,8 +21,8 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'postgres',
-    password: 'postgres',
-    port: 5433,
+    password: 'admin',
+    port: 5432,
 });
 const app = express();
 const port = 8080;
@@ -32,7 +31,6 @@ app.use(bodyParser.json())
 
 
 class Verify_Request {
-
     equation: string;
     max_moves: number;
     solutions: [];
@@ -43,21 +41,18 @@ class Verify_Solutions {
     moves: number;
 }
 
-
 app.post('/puzzles/insert', async (req, res) => {
     try {
     
-        const queryText = "INSERT INTO Request(id, equation) VALUES($1, $2) RETURNING ID;";
-        pool.query(queryText, [1,'1=2']);
+        const queryText = "INSERT INTO Person(id, name) VALUES($1, $2);"; // returning id
+        pool.query(queryText, [1,'Franz']);
 
       //const now = await pool.query('SELECT * from NOW()');
-
         res.send("test");
     } catch (err) {
         console.log(err.stack)
     }
 
-    
 });
 
 
