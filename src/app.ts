@@ -113,8 +113,8 @@ app.post('/puzzles/verify', async (req, res)  => {
                                 //3. Schleife
                                 for(let j = 0; j < c.length; j++) {
                                     if( i!=j ) {
-                                        if( lastSolutions[p][j] !==  '='  && lastSolutions[p][j] !==  '+' && lastSolutions[p][j] !==  '-') {
-                                            let addingArray = addingDigit(lastSolutions[p][j]);
+                                        if( c[j] !==  '='  && c[j] !==  '+' && c[j] !==  '-') {
+                                            let addingArray = addingDigit(c[j]);
 
                                             if(addingArray && removeArray.length > 0  ) {
 
@@ -141,6 +141,8 @@ app.post('/puzzles/verify', async (req, res)  => {
             }
 
         }
+
+        console.log("Current Solution: " + currentSoltions);
 
         //status 417
         //status 200
