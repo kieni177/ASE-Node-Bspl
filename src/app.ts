@@ -75,6 +75,8 @@ app.post('/puzzles/verify', async (req, res)  => {
 
             for(let p = 0; p < lastSolutions.length; p++) {
 
+
+                //1. Schleife
                 for(let i = 0; i < lastSolutions[p].length; i++) {
 
                     //2b Schelife wenn ziffer -> m = moveDigit[]
@@ -87,11 +89,14 @@ app.post('/puzzles/verify', async (req, res)  => {
                         let removeArray = removeDigit(splitSymbols[i]);
 
                         if(removeArray && removeArray.length > 0 ) {
+
+                            //2. Schleife
                             for(let k = 0; k <= removeArray.length; k++) {
                                 let c = [...splitSymbols];
                                 c[i] = removeArray[k];
 
 
+                                //3. Schleife
                                 for(let j = 0; j < c.length; j++) {
                                     if( i!=j ) {
                                         if( splitSymbols[i] !==  '='  && splitSymbols[i] !==  '+' && splitSymbols[i] !==  '-') {
@@ -99,6 +104,7 @@ app.post('/puzzles/verify', async (req, res)  => {
 
                                             if(addingArray && removeArray.length > 0  ) {
 
+                                                //4. Schleife
                                                 for(let a = 0;  a < addingArray.length; a++) {
                                                     let c2 = [...c];
                                                     c2[j] = addingArray[a];
@@ -127,11 +133,8 @@ app.post('/puzzles/verify', async (req, res)  => {
 
 
         const requestInsertQuery = "INSERT INTO Request(correct, equations, max_moves) VALUES($1, $2, $3) RETURNING id;";
-        pool.query(requestInsertQuery, [false, verifyRequest.equation, verifyRequest.max_moves]);
-
-
-        
-
+        let insert = await pool.query(requestInsertQuery, [false, verifyRequest.equation, verifyRequest.max_moves]);
+         // insert.rows[0].id;
 
         res.send("hias");
     } catch (err) {
@@ -217,13 +220,13 @@ app.get('/puzzles/:id', async  (req, res) => {
         // set up Response
         let response = new Response_GET();
 
-        response.id = request.body.rows[0].id;
-        response.correct   = request.body.rows[0].correct;
-        response.equation  = request.body.rows[0].equation;
-        response.max_moves = request.body.rows[0].max_moves;
+        response.id = request.rows[0].id;
+        response.correct   = request.rows[0].correct;
+        response.equation  = request.rows[0].equation;
+        response.max_moves = request.rows[0].max_moves;
 
-        response.user_provided = solutionsUser.body.rows;
-        response.pc_provided   = solutionsPC.body.rows;
+        response.user_provided = solutionsUser.rows;
+        response.pc_provided   = solutionsPC.rows;
 
         res.status(200);
         
