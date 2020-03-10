@@ -138,8 +138,9 @@ app.post('/puzzles/verify', async (req, res)  => {
 
             for(let p = 0; p < lastSolutions.length; p++ ) {
 
+
+                // 1 Schleife
                 for(let i = 0; i < lastSolutions[p].length; i++) {
-                    console.log(lastSolutions[p]);
 
                     let movingArray = movingDigit(lastSolutions[p][i]);
 
@@ -150,6 +151,37 @@ app.post('/puzzles/verify', async (req, res)  => {
                             currentSoltions.push(c3);
                        }
                     }
+
+                    let removeArray = removeDigit(lastSolutions[p][i]);
+                    if(removeArray && removeArray.length > 0 ) {
+                          //2. Schleife
+                          for(let k = 0; k <= removeArray.length; k++) {
+                            let c = [...lastSolutions[p][i]];
+                            c[i] = removeArray[k];
+
+                                 //3. Schleife
+                                 for(let j = 0; j < c.length; j++) {
+                                    if( i!=j ) {
+                                        if( c[j] !==  '='  && c[j] !==  '+' && c[j] !==  '-') {
+                                            let addingArray = addingDigit(c[j]);
+
+                                            if(addingArray && removeArray.length > 0  ) {
+
+                                                //4. Schleife
+                                                for(let a = 0;  a < addingArray.length; a++) {
+                                                    let c2 = [...c];
+                                                    c2[j] = addingArray[a];
+                                                    currentSoltions.push(c2);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                          }
+                    }
+                    
+
                 }
             }
         }
