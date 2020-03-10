@@ -42,17 +42,81 @@ class Verify_Solutions {
 
 app.post('/puzzles/insert', async (req, res) => {
     try {
-    
-        const queryText = "INSERT INTO Person(id, name) VALUES($1, $2);"; // returning id
-        pool.query(queryText, [1,'Franz']);
 
-      //const now = await pool.query('SELECT * from NOW()');
+        checkEquation("1-8-4=-1");
+    
+       // const queryText = "INSERT INTO Person(id, name) VALUES($1, $2);"; // returning id
+        // pool.query(queryText, [1,'Franz']);
+
+      // const now = await pool.query('SELECT * from NOW()');
         res.send("test");
     } catch (err) {
         console.log(err.stack)
     }
 
 });
+
+
+function checkEquation(eq: string): boolean {
+    let splitEqual = eq.split('=');
+
+    let leftArray = splitEqual[0].split('');
+    let rightArray = splitEqual[1].split('');
+
+
+    let helpLeft = 0;
+    for(let i = 0; i < leftArray.length; i++) {
+        if( isDigit(leftArray[i]))
+            helpLeft += parseInt(leftArray[i]);
+        if( leftArray[i] === '-')  {
+            helpLeft -= parseInt(leftArray[i+1]);
+            i++
+        }
+        else if( leftArray[i] === '+')  {
+            helpLeft += parseInt(leftArray[i+1]);
+            i++;
+        }
+           
+
+    }
+
+    let helpRight = 0;
+    for(let j = 0; j < rightArray.length; j++) {
+        if( isDigit(rightArray[j]))
+            helpRight += parseInt(rightArray[j]);
+        if( rightArray[j] === '-')  {
+            helpRight -= parseInt(rightArray[j+1]);
+            j++;
+        }
+        else if( rightArray[j] === '+')   {
+            helpRight += parseInt(rightArray[j+1]);
+            j++;
+        }
+
+    }
+
+    const numberLeft = myModulo(helpLeft);
+    const numberRight = myModulo(helpRight);
+    console.log("NumberLeft: " + numberLeft + " Number Right " + numberRight);
+
+    
+    return numberLeft === numberRight;
+}
+
+
+function myModulo(n : number) : number {
+    if (n < 0) {
+        return ((n%10)+10)%10;
+    }
+    return n%10;
+}
+
+function isDigit(digit: string): boolean {
+    if( digit !== '+' && digit !== '-' )
+        return true;
+    return false;
+}
+
 
 
 app.post('/puzzles/verify', async (req, res)  => {
@@ -75,7 +139,6 @@ app.post('/puzzles/verify', async (req, res)  => {
 
             for(let p = 0; p < lastSolutions.length; p++) {
 
-
                 //1. Schleife
                 for(let i = 0; i < lastSolutions[p].length; i++) {
 
@@ -84,10 +147,8 @@ app.post('/puzzles/verify', async (req, res)  => {
                     // -) c3 = copy symbole
                     // -) c3[i] = m[0]
 
-
                     if( lastSolutions[p][i] !==  '='  && lastSolutions[p][i] !==  '+' && lastSolutions[p][i] !==  '-') {
 
-                        
                         let movingArray = movingDigit(lastSolutions[p][i]);
 
                         if(movingArray && movingArray.length > 0  ) {
@@ -95,7 +156,6 @@ app.post('/puzzles/verify', async (req, res)  => {
                                 let c3 = [...lastSolutions[p][i]];
                                 c3[i] = movingArray[o];
                                 currentSoltions.push(c3);
-
                            }
                         }
 
@@ -128,7 +188,6 @@ app.post('/puzzles/verify', async (req, res)  => {
                                         }
                                     }
                                 }
-
                                 //3. Schleife(j) alle Symbole // i!=j wenn ziffer ==> addingDigit
                                 //4. Schleife(a) a durcgehen (l)
                                 // c2 = copy c
@@ -136,10 +195,8 @@ app.post('/puzzles/verify', async (req, res)  => {
                             }
                         }
                     }
-
                 }
             }
-
         }
 
         console.log("Current Solution: " + currentSoltions);
